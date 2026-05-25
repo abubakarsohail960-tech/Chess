@@ -40,7 +40,12 @@ export async function POST(request: Request) {
 
     await createSession(user.id);
     return jsonOk({ user }, 201);
-  } catch {
-    return jsonError("Registration failed", 500);
+  } catch (err) {
+    console.error("Register error:", err);
+    const msg =
+      err instanceof Error && err.message.includes("connect")
+        ? "Database not connected. Run: npx prisma db push"
+        : "Registration failed";
+    return jsonError(msg, 500);
   }
 }

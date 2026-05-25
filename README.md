@@ -36,31 +36,25 @@ Online chess with **ELO ratings**, **friends**, **private rooms**, **login/regis
 
 3. **Environment variables**
 
-   Copy `.env.example` to `.env`:
+   Copy `.env.example` to `.env` (defaults use **SQLite** — no PostgreSQL install needed).
 
-   ```bash
-   cp .env.example .env
-   ```
-
-   Set:
-
-   - `DATABASE_URL` — PostgreSQL connection string ([Neon](https://neon.tech), [Supabase](https://supabase.com), or [Vercel Postgres](https://vercel.com/docs/storage/vercel-postgres))
-   - `JWT_SECRET` — Random secret (`openssl rand -base64 32`)
-   - `NEXT_PUBLIC_APP_URL` — `http://localhost:3000` for local dev
-
-4. **Push database schema**
+4. **Create the database**
 
    ```bash
    npx prisma db push
    ```
 
-5. **Run dev server**
+5. **Run dev server** (keep this terminal open)
 
    ```bash
    npm run dev
    ```
 
-   Open [http://localhost:3000](http://localhost:3000).
+   Open **[http://localhost:3000](http://localhost:3000)** only after you see `Ready`.
+
+   > **ERR_CONNECTION_REFUSED?** The dev server is not running. Run `npm run dev` first.
+   >
+   > **Register/login fails?** Run `npx prisma db push` to create the SQLite database.
 
 ## Deploy to Vercel
 

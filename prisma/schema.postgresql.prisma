@@ -1,0 +1,14 @@
+// Use this schema for Vercel / Neon PostgreSQL production.
+// Copy to schema.prisma before deploying:
+//   copy prisma\schema.postgresql.prisma prisma\schema.prisma
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// Models are identical — copy enums and models from schema.prisma after edits.
