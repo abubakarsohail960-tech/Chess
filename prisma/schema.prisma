@@ -1,0 +1,96 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  email        String   @unique
+  passwordHash String
+  elo          Int      @default(1200)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  hostedRooms  Room[]   @relation("HostRooms")
+  guestRooms   Room[]   @relation("GuestRooms")
+  wonRooms     Room[]   @relation("WonRooms")
+
+  sentRequests     Friendship[] @relation("SentRequests")
+  receivedRequests Friendship[] @relation("ReceivedRequests")
+
+  gamesAsWhite Game[] @relation("WhitePlayer")
+  gamesAsBlack Game[] @relation("BlackPlayer")
+}
+
+model Friendship {
+  id         String           @id @default(cuid())
+  senderId   String
+  receiverId String
+  status     FriendshipStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+  updatedAt  DateTime         @updatedAt
+
+  sender   User @relation("SentRequests", fields: [senderId], references: [id], onDelete: Cascade)
+  receiver User @relation("ReceivedRequests", fields: [receiverId], references: [id], onDelete: Cascade)
+
+  @@unique([senderId, receiverId])
+}
+
+enum FriendshipStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+model Room {
+  id        String     @id @default(cuid())
+  code      String     @unique
+  name      String?
+  hostId    String
+  guestId   String?
+  status    RoomStatus @default(WAITING)
+  fen       String     @default("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1")
+  pgn       String     @default("")
+  whiteId   String?
+  blackId   String?
+  winnerId  String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  host   User  @relation("HostRooms", fields: [hostId], references: [id], onDelete: Cascade)
+  guest  User? @relation("GuestRooms", fields: [guestId], references: [id], onDelete: SetNull)
+  winner User? @relation("WonRooms", fields: [winnerId], references: [id], onDelete: SetNull)
+}
+
+enum RoomStatus {
+  WAITING
+  ACTIVE
+  FINISHED
+}
+
+model Game {
+  id           String   @id @default(cuid())
+  whiteId      String
+  blackId      String
+  whiteEloBefore Int
+  blackEloBefore Int
+  whiteEloAfter  Int?
+  blackEloAfter  Int?
+  result       GameResult
+  pgn          String   @default("")
+  createdAt    DateTime @default(now())
+
+  whitePlayer User @relation("WhitePlayer", fields: [whiteId], references: [id], onDelete: Cascade)
+  blackPlayer User @relation("BlackPlayer", fields: [blackId], references: [id], onDelete: Cascade)
+}
+
+enum GameResult {
+  WHITE_WIN
+  BLACK_WIN
+  DRAW
+}
