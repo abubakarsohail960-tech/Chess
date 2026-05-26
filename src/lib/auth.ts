@@ -41,7 +41,7 @@ export async function createSession(userId: string) {
 
 export async function destroySession() {
   const cookieStore = await cookies();
-  cookieStore.delete(COOKIE_NAME);
+  cookieStore.delete(COOKIE_NAME, { path: "/" });
 }
 
 export async function getSessionUserId(): Promise<string | null> {

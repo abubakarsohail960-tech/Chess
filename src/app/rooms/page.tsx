@@ -25,8 +25,8 @@ export default function RoomsPage() {
 
   async function load() {
     const [meRes, roomsRes] = await Promise.all([
-      fetch("/api/auth/me"),
-      fetch("/api/rooms"),
+      fetch("/api/auth/me", { credentials: "include" }),
+      fetch("/api/rooms", { credentials: "include" }),
     ]);
     if (meRes.ok) {
       const { user: u } = await meRes.json();
@@ -47,6 +47,7 @@ export default function RoomsPage() {
     setError("");
     const res = await fetch("/api/rooms", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name: roomName || undefined }),
     });
@@ -65,6 +66,7 @@ export default function RoomsPage() {
     setError("");
     const res = await fetch("/api/rooms", {
       method: "PUT",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code: joinCode }),
     });

@@ -20,7 +20,7 @@ export function Navbar({ user }: NavbarProps) {
   const router = useRouter();
 
   async function logout() {
-    await fetch("/api/auth/logout", { method: "POST" });
+    await fetch("/api/auth/logout", { method: "POST", credentials: "include" });
     router.push("/login");
     router.refresh();
   }

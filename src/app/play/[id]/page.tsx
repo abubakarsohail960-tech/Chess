@@ -28,7 +28,7 @@ export default function PlayPage({ params }: { params: Promise<{ id: string }> }
   const [copyOk, setCopyOk] = useState(false);
 
   const fetchRoom = useCallback(async () => {
-    const res = await fetch(`/api/rooms/${id}`);
+    const res = await fetch(`/api/rooms/${id}`, { credentials: "include" });
     if (res.status === 401) {
       router.push("/login");
       return;
@@ -39,7 +39,7 @@ export default function PlayPage({ params }: { params: Promise<{ id: string }> }
   }, [id, router]);
 
   useEffect(() => {
-    fetch("/api/auth/me")
+    fetch("/api/auth/me", { credentials: "include" })
       .then((r) => r.json())
       .then((d) => d.user && setUser(d.user));
     fetchRoom();
@@ -51,6 +51,7 @@ export default function PlayPage({ params }: { params: Promise<{ id: string }> }
     async (from: string, to: string, promotion?: string) => {
       const res = await fetch(`/api/rooms/${id}/move`, {
         method: "POST",
+        credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ from, to, promotion }),
       });

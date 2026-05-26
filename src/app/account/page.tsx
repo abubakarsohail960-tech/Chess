@@ -19,7 +19,7 @@ export default function AccountPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetch("/api/account")
+    fetch("/api/account", { credentials: "include" })
       .then((r) => r.json())
       .then((d) => {
         if (d.user) {
@@ -44,6 +44,7 @@ export default function AccountPage() {
 
     const res = await fetch("/api/account", {
       method: "PATCH",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });

@@ -25,8 +25,8 @@ export default function FriendsPage() {
 
   async function load() {
     const [meRes, friendsRes] = await Promise.all([
-      fetch("/api/auth/me"),
-      fetch("/api/friends"),
+      fetch("/api/auth/me", { credentials: "include" }),
+      fetch("/api/friends", { credentials: "include" }),
     ]);
     if (meRes.ok) {
       const { user: u } = await meRes.json();
@@ -49,6 +49,7 @@ export default function FriendsPage() {
     setMessage("");
     const res = await fetch("/api/friends", {
       method: "POST",
+      credentials: "include",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
     });
